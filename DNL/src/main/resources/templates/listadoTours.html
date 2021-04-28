@@ -1,0 +1,210 @@
+
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Administrador</title>
+    <link href="/css/styles.css" rel="stylesheet" type="text/css"/>
+    <script src="/js/header.js" type="text/javascript"></script>
+    <script src="http://code.jquery.com/jquery-latest.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.1.0/jquery.min.js"></script>
+    <script type="text/javascript" src="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="http://rawgit.com/vitmalina/w2ui/master/dist/w2ui.min.css" />
+</head>
+<body>
+    <header class="header3">
+            <div class="wrapper">
+                <div class="logo">
+                    <img src="https://i.imgur.com/yDxltgb.png" alt="Escudo Nuevo Leon"/>
+                    DISFRUTA NUEVO LEON
+                </div>
+                <nav style="margin-top: -50px;">
+                    <a href="index">Inicio</a>
+                    <a href="tours">Conoce</a>
+                    <a href="contacto">Contacto</a>
+                </nav>
+                </div>
+        </header>
+    <div id="grid" style="width: 100%; height: 100%;"></div>
+    <script type="text/javascript">
+        $(function () {
+            $.get('getTours', (resultados) => {
+                $('#grid').w2grid({
+                    recid: 'id',
+                    name: 'grid',
+                    show: { 
+                        toolbar: true,
+                        footer: true,
+                        toolbarAdd: true,
+                        toolbarDelete: true,
+                        toolbarSave: false,
+                        toolbarEdit: true
+                    },
+                    records: resultados,
+                    searches: [                
+                        { field: 'description', match:'contains', caption: 'Atracción', type: 'text' },
+                        { field: 'date', caption: 'Fecha', type: 'date' }
+                    ],
+                    columns: [
+                        {field: 'image', text: 'Vínculo a la imagen del recinto', size: '15%'},
+                        {field: 'description', text: 'Atracción', size: '90%'},
+                        {field: 'date', text: 'Fecha del evento', size: '10%'}
+                    ],
+                    onAdd: function (event) {
+                        $().w2form({
+                            name: 'form',
+                            fields: [
+                                {
+                                    field: 'image',
+                                    type: 'text',
+                                    required: true,
+                                    html: {
+                                        label: 'Imagen',
+                                        attr: 'style="width: 300px"'
+                                    }
+                                },
+                                {
+                                    field: 'description',
+                                    type: 'text',
+                                    required: true,
+                                    html: {
+                                        label: 'Atracción',
+                                        attr: 'style="width: 300px"'
+                                    }
+                                },
+                                {
+                                    field: 'date',
+                                    type: 'date',
+                                    html: {
+                                        label: 'Fecha',
+                                        attr: 'style="width: 300px;"'
+                                    }
+                                }
+                            ],
+                            actions: {
+                                'Guardar': function (event) {
+                                    $.post('altaEvento', {
+                                        request: JSON.stringify(this.record)
+                                    }, (result) => {
+                                        window.location.reload();
+                                    });
+                                },
+                                'Listado': function (event) {
+                                    window.location = 'listadoTours';
+                                },
+                                'Clear': function (event) {
+                                    console.log('clear', event);
+                                    this.clear();
+                                }
+                            }
+                        });
+                        $().w2popup('open', {
+                            title   : 'Alta del evento',
+                            body    : '<div id="form" style="width: 100%; height: 100%;"></div>',
+                            style   : 'padding: 0px 0px 0px 0px',
+                            width   : 500,
+                            height  : 300, 
+                            showMax : true,
+                            onToggle: function (event) {
+                                $(w2ui.foo.box).hide();
+                                event.onComplete = function () {
+                                    $(w2ui.foo.box).show();
+                                    w2ui.foo.resize();
+                                };
+                            },
+                            onOpen: function (event) {
+                                event.onComplete = function () {
+                                    // specifying an onOpen handler instead is equivalent to specifying an onBeforeOpen handler, which would make this code execute too early and hence not deliver.
+                                    $('#w2ui-popup #form').w2render('form');
+                                };
+                            }
+                        });
+                    },
+                    onEdit: function (event) {
+                        var grid = this;
+                        event.onComplete = function () {
+                            var sel = grid.getSelection();
+                            var record = $.extend(true, {}, grid.get(sel[0]));
+                            $().w2form({
+                            name: 'form',
+                            record:record,
+                            fields: [
+                                {
+                                    field: 'image',
+                                    type: 'text',
+                                    required: true,
+                                    html: {
+                                        label: 'Imagen',
+                                        attr: 'style="width: 300px"'
+                                    }
+                                },
+                                {
+                                    field: 'description',
+                                    type: 'text',
+                                    required: true,
+                                    html: {
+                                        label: 'Atracción',
+                                        attr: 'style="width: 300px"'
+                                    }
+                                },
+                                {
+                                    field: 'date',
+                                    type: 'date',
+                                    html: {
+                                        label: 'Fecha',
+                                        attr: 'style="width: 300px;"'
+                                    }
+                                }
+                            ],
+                                actions: {
+                                    'Guardar': function (event) {
+                                        $.post('cambioEvento', {
+                                            request: JSON.stringify(this.record)
+                                        }, (result) => {
+                                            window.location.reload();
+                                        });
+                                    },
+                                    'Cancelar': function (event) {
+                                        console.log('clear', event);
+                                        this.clear();
+                                        this.close();
+                                    }
+                                }
+                            });
+                            $().w2popup('open', {
+                                title   : 'Editar evento',
+                                body    : '<div id="form" style="width: 100%; height: 100%;"></div>',
+                                style   : 'padding: 0px 0px 0px 0px',
+                                width   : 500,
+                                height  : 300, 
+                                showMax : true,
+                                onToggle: function (event) {
+                                    $(w2ui.foo.box).hide();
+                                    event.onComplete = function () {
+                                        $(w2ui.foo.box).show();
+                                        w2ui.foo.resize();
+                                    };
+                                },
+                                onOpen: function (event) {
+                                    event.onComplete = function () {
+                                        // specifying an onOpen handler instead is equivalent to specifying an onBeforeOpen handler, which would make this code execute too early and hence not deliver.
+                                        $('#w2ui-popup #form').w2render('form');
+                                    };
+                                }
+                            });
+                        };
+                    },
+                    onDelete: function (event) {
+                        //console.log(event);
+                        var seleccion = w2ui.grid.getSelection();
+                        event.onComplete = function () {
+                            $.post('bajaEvento', {
+                                request: JSON.stringify({listaTours: seleccion})
+                            }, (obj)=>{
+                                console.log(obj);
+                            });
+                        };
+                    }
+                });
+            });
+        });
+    </script>
+</body>

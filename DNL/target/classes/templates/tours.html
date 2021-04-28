@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <title>Disfruta NL</title>
+        <link href="css/styles.css" rel="stylesheet" type="text/css"/>
+        <script src="http://code.jquery.com/jquery-latest.js"></script>
+       
+        
+    </head>
+    <body>
+        <header class="header">
+            <div class="wrapper">
+                <div class="logo">
+                    <img src="https://i.imgur.com/yDxltgb.png" alt="Escudo Nuevo Leon"/>
+                    DISFRUTA NUEVO LEON
+                </div>
+                <nav>
+                    <a href="index">Inicio</a>
+                    <a href="conoce">Conoce</a>
+                    <a href="contacto">Contacto</a>
+                </nav>
+                </div>
+        </header>
+        <div id="admin">
+            <script type="text/javascript">
+        $(function () {
+            $.get('getTours', (resultados) => {
+            var html = resultados.map(item => {
+              var obj= `<table class="tour">
+              <tr class="titulos1">
+                  <th>Imagen del lugar</th>
+                  <th>Descripción del evento</th>
+                  <th>Fecha del evento</th>
+              </tr>
+              <tr class=almacen">
+                  <th id="fila"><img src=${item.image} style="border-radius: 8px;border: 1px solid #ddd; border-radius: 4px;  width: 60%;"></th>
+                  <td class="fila1">${item.description}</td>
+                  <td class="fila2">${item.date}</td>
+              </tr>
+                  <br>
+          </table>`;
+              return obj;
+            });
+            document.getElementById("admin").innerHTML = html.join(" ");
+            });
+        });
+            </script>
+        </div>
+    </body>
+</html>

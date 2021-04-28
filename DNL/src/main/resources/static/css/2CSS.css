@@ -1,0 +1,53 @@
+.formats{
+	display: block;
+	font-family: Arial;
+        color: black;
+	font-size: 16px;
+	font-weight: normal;
+	letter-spacing: 0.01em;
+	line-height: 18px;
+	margin: 0 auto 22px;
+	padding: 0;
+	text-align: center;
+	width: 355px;
+}
+.forminput {
+	background: none;
+	border: 2px solid #FFFFFF;
+	color: black;
+	display: block;
+	font-family: Arial;
+	font-size: 18px;
+	font-weight: normal;
+	height: 39px;
+	line-height: 43px;
+	margin: 0 0 17px;
+	padding: 0 4px;
+	text-align: center;
+	text-transform: uppercase;
+	width: 491px;
+}
+#submit{
+	background-color: #04a8d2;
+	border: none;
+	height: 43px;
+	width: 143px;
+        margin: 0 auto 22px;
+	padding: 0;
+	text-align: center;
+}
+#password{
+}
+#name{
+}
+#medio{
+	width: 80%;
+	margin: 0 auto;
+	text-align: center;
+	border-radius: 15px;
+	box-sizing: content-box;
+	width: 350px;
+        height: 200px;
+	background-color: rgba(154, 180, 197, 0.9);
+}
+
